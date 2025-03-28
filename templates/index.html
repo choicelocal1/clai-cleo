@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}ChatBot - Home{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2 text-center">
+            <h1 class="display-4 mb-4">Welcome to ChatBot</h1>
+            <p class="lead mb-4">An intelligent chatbot powered by LangChain and OpenAI</p>
+            
+            <div class="d-grid gap-3 d-sm-flex justify-content-sm-center mt-5">
+                {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('dashboard.index') }}" class="btn btn-primary btn-lg px-4 gap-3">Go to Dashboard</a>
+                    <a href="{{ url_for('chat.new_chat') }}" class="btn btn-outline-secondary btn-lg px-4">Start New Chat</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg px-4 gap-3">Login</a>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-secondary btn-lg px-4">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-5 pt-5">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Smart Conversations</h3>
+                    <p class="card-text">Engage with an AI assistant powered by OpenAI's advanced language models.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Secure Authentication</h3>
+                    <p class="card-text">Your conversations are private and secure with our user authentication system.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <h3 class="card-title">Chat History</h3>
+                    <p class="card-text">Access your previous conversations from your personalized dashboard.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

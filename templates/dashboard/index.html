@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container dashboard-container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Your Chats</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{{ url_for('chat.new_chat') }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> New Chat
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Chat Statistics -->
+        <div class="col-md-4 mb-4">
+            <div class="card stats-card">
+                <div class="card-body">
+                    <h2 class="card-title">Statistics</h2>
+                    <div class="stats-item">
+                        <div class="stats-label">Total Chats</div>
+                        <div class="stats-value">{{ chat_count }}</div>
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">Total Messages</div>
+                        <div class="stats-value">{{ total_messages }}</div>
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">Avg. Messages per Chat</div>
+                        <div class="stats-value">
+                            {{ (total_messages / chat_count) | round(1) if chat_count > 0 else 0 }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sorting Options -->
+            <div class="card filter-card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sort By</h5>
+                    <div class="list-group">
+                        <a href="{{ url_for('dashboard.index', sort='newest') }}" 
+                           class="list-group-item list-group-item-action {{ 'active' if current_sort == 'newest' else '' }}">
+                            Newest First
+                        </a>
+                        <a href="{{ url_for('dashboard.index', sort='oldest') }}" 
+                           class="list-group-item list-group-item-action {{ 'active' if current_sort == 'oldest' else '' }}">
+                            Oldest First
+                        </a>
+                        <a href="{{ url_for('dashboard.index', sort='title') }}" 
+                           class="list-group-item list-group-item-action {{ 'active' if current_sort == 'title' else '' }}">
+                            By Title
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat List -->
+        <div class="col-md-8">
+            {% if chats %}
+                <div class="row">
+                    {% for chat in chats %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card chat-card h-100">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ chat.title }}</h5>
+                                    <p class="card-subtitle mb-2 text-muted">
+                                        Created: {{ chat.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                    </p>
+                                    <p class="chat-preview">
+                                        {% if chat.id in chat_previews %}
+                                            {{ chat_previews[chat.id] }}
+                                        {% else %}
+                                            No messages yet.
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="card-footer">
+                                    <a href="{{ url_for('chat.chat_view', chat_id=chat.id) }}" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-chat-dots"></i> Open Chat
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteChatModal" 
+                                            data-chat-id="{{ chat.id }}" 
+                                            data-chat-title="{{ chat.title }}">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="bi bi-chat-square-text"></i>
+                    </div>
+                    <h3>No Chats Yet</h3>
+                    <p>Start a new conversation with the chatbot.</p>
+                    <a href="{{ url_for('chat.new_chat') }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> New Chat
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Chat Modal -->
+<div class="modal fade" id="deleteChatModal" tabindex="-1" aria-labelledby="deleteChatModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteChatModalLabel">Delete Chat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<span id="deleteChatTitle"></span>"? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteChatForm" action="" method="POST">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

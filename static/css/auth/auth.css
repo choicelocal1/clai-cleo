@@ -1,0 +1,36 @@
+.auth-card {
+    margin-top: 2rem;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.auth-card .card-header {
+    padding: 1.5rem;
+    border-bottom: none;
+}
+
+.auth-card .card-body {
+    padding: 2rem;
+}
+
+.auth-card .card-footer {
+    background-color: transparent;
+    padding: 1.2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+}
